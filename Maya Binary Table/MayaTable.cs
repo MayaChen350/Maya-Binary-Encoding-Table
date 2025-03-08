@@ -21,10 +21,17 @@ namespace MayaBinaryTable
 		{
 			const string resourceName = "MayaBinaryTable.table.csv";
 
+			mayaTable = new string[255][];
+			for (int i = 0; i < mayaTable.Length; i++)
+			{
+				mayaTable[i] = new string[2];
+			}
+
 			using (Stream stream = Assembly.GetExecutingAssembly().GetManifestResourceStream(resourceName))
 			using (StreamReader reader = new StreamReader(stream))
 			{
 				int index = 0;
+
 				while (!reader.EndOfStream)
 				{
 					string[] splittedLine = reader.ReadLine().Split(',');
@@ -42,9 +49,9 @@ namespace MayaBinaryTable
 				string[] table = new string[mayaTable.Length];
 
 				for (int i = 0; i < mayaTable.Length; i++)
-				{
-					table[i] = mayaTable[i][I_TABLE_STRING];
-				}
+					if (mayaTable[i][I_TABLE_STRING] != null)
+						table[i] = mayaTable[i][I_TABLE_STRING];
+					else Array.Resize(ref table, table.Length - 1);
 
 				return table;
 			}
@@ -55,8 +62,15 @@ namespace MayaBinaryTable
 			EncodedMayaBytes bytes = new EncodedMayaBytes();
 			short foundElementIndex;
 
-			if (!short.TryParse(mayaTable.FirstOrDefault(elem => elem[I_TABLE_STRING] == str)[I_TABLE_INDEX], out foundElementIndex))
+			try
+			{
+				foundElementIndex = short.Parse(mayaTable.First(elem => elem[I_TABLE_STRING] == str)[I_TABLE_INDEX]);
+			}
+			catch (Exception e)
+			{
 				foundElementIndex = 0;
+			}
+			
 
 			bytes.SetBytes(foundElementIndex);
 

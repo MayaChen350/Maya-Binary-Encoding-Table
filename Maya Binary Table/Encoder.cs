@@ -26,12 +26,7 @@ namespace MayaBinaryTable
 			List<byte> encodedStream = new List<byte>();
 			while (!file.EndOfStream)
 			{
-				EncodedMayaBytes? bytes = TryEncodeChar((char)file.Read());
-
-				if (bytes != null)
-				{
-					encodedStream.Add(bytes.Value);
-				}
+				TryEncodeChar(ref encodedStream, (char)file.Read());
 			}
 
 			if (characterStack != string.Empty)
@@ -40,24 +35,45 @@ namespace MayaBinaryTable
 
 			return encodedStream.ToArray();
 		}
-		private EncodedMayaBytes? TryEncodeChar(char _char)
+
+		// TODO: Solve what the heck is this (DO BETTER!!!)
+		private void TryEncodeChar(ref List<byte> stream, char _char)
 		{
 			EncodedMayaBytes bytes = new EncodedMayaBytes();
 			string charStack = characterStack;
 
-			charStack.Append(_char);
-			List<string> elementsFound = mayaTable.TableElements.Where(elem => elem.StartsWith(characterStack)).ToList();
+			charStack += _char;
+			List<string> elementsFound = mayaTable.TableElements.Where(elem => elem.StartsWith(charStack)).ToList();
 
 			if (symbolFound && !elementsFound.Any())
 			{
+				while (!elementsFound.Any())
+				{
+					charStack.Remove(charStack.Length - 1);
+					elementsFound = mayaTable.TableElements.Where(elem => elem.StartsWith(charStack)).ToList();
+				}
+
+				List<String> invalidSymbolsFound = new List<string>();
+				invalidSymbolsFound.Add(elementsFound.First());
+
+				var pseudoCharFile = characterStack + _char;
+				charStack = string.Empty;
+
+				while (pseudoCharFile != string.Empty)
+				{
+					charStack += pseudoCharFile.First();
+					pseudoCharFile = pseudoCharFile.Remove(0);
+					elementsFound = mayaTable.TableElements.Where(elem => elem.StartsWith(charStack)).ToList();
+				}
+
 				bytes = mayaTable.GetBytesFromExactString(characterStack);
 				symbolFound = false;
 				characterStack = _char.ToString();
+				stream.Add(bytes);
 			}
 
-			characterStack.Append(_char);
-			symbolFound = elementsFound.Count == 1;
-			return null;
+			characterStack += _char;
+			symbolFound = elementsFound.Any();
 		}
 	}
 }

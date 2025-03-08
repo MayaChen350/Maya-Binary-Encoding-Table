@@ -21,7 +21,7 @@ namespace MayaBinaryTable
 
 		public void SetBytes(short value)
 		{
-			if (value <= 128)
+			if (value >= 128)
 			{
 				FirstByte = (byte)(0b10000000 | ((value & 0xFF00) >> 8));
 				LastByte = (byte)(value & 0x00FF);
