@@ -19,20 +19,9 @@ namespace MayaBinaryTable
 			}
 
 			var reader = new StreamReader(filePath);
-			byte[] encodedString = EncodeToMayaEncoding(reader);
+
+			byte[] encodedString = new Encoder(new MayaTable()).Encode(reader);
 			File.WriteAllBytes("C:\\Users\\Mayachen\\Downloads\\test_result.txt", encodedString);
-		}
-
-		static byte[] EncodeToMayaEncoding(StreamReader file)
-		{
-			List<byte> encodedString = new List<byte>();
-			while (!file.EndOfStream)
-			{
-				if (file.Read() == 'a')
-					encodedString.Add(1);
-			}
-
-			return encodedString.ToArray();
 		}
 	}
 }

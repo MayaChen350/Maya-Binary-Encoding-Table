@@ -53,8 +53,10 @@ namespace MayaBinaryTable
 		public EncodedMayaBytes GetBytesFromExactString(string str)
 		{
 			EncodedMayaBytes bytes = new EncodedMayaBytes();
+			short foundElementIndex;
 
-			short foundElementIndex = short.Parse(mayaTable.FirstOrDefault(elem => elem[I_TABLE_STRING].StartsWith(str))[I_TABLE_INDEX]);
+			if (!short.TryParse(mayaTable.FirstOrDefault(elem => elem[I_TABLE_STRING] == str)[I_TABLE_INDEX], out foundElementIndex))
+				foundElementIndex = 0;
 
 			bytes.SetBytes(foundElementIndex);
 

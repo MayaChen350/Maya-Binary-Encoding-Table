@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -12,29 +13,51 @@ namespace MayaBinaryTable
 
 		private string characterStack;
 
-		private bool SymbolFound;
+		private bool symbolFound;
 
 		public Encoder(MayaTable _table)
 		{
 			mayaTable = _table;
-			characterStack = "";
+			characterStack = string.Empty;
 		}
 
-		// TODO
-		public EncodedMayaBytes? EncodeChar(char _char)
+		public byte[] Encode(StreamReader file)
+		{
+			List<byte> encodedStream = new List<byte>();
+			while (!file.EndOfStream)
+			{
+				EncodedMayaBytes? bytes = TryEncodeChar((char)file.Read());
+
+				if (bytes != null)
+				{
+					encodedStream.Add(bytes.Value);
+				}
+			}
+
+			if (characterStack != string.Empty)
+				foreach (char _char in characterStack)
+					encodedStream.Add(mayaTable.GetBytesFromExactString(_char.ToString()));
+
+			return encodedStream.ToArray();
+		}
+		private EncodedMayaBytes? TryEncodeChar(char _char)
 		{
 			EncodedMayaBytes bytes = new EncodedMayaBytes();
+			string charStack = characterStack;
 
-			//characterStack.Append(_char);
-			//var elementsFound = mayaTable.TableElements.FirstOrDefault(characterStack);
-			//var new_ = elementsFound.Where(e);
+			charStack.Append(_char);
+			List<string> elementsFound = mayaTable.TableElements.Where(elem => elem.StartsWith(characterStack)).ToList();
 
-			//if (!)
-			//{
+			if (symbolFound && !elementsFound.Any())
+			{
+				bytes = mayaTable.GetBytesFromExactString(characterStack);
+				symbolFound = false;
+				characterStack = _char.ToString();
+			}
 
-			//}
-
-			return bytes;
+			characterStack.Append(_char);
+			symbolFound = elementsFound.Count == 1;
+			return null;
 		}
 	}
 }
