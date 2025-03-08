@@ -1,8 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Threading;
 
-namespace Maya_Binary_Table
+namespace MayaBinaryTable
 {
 	internal class Program
 	{
