@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace MayaBinaryTable
 {
-	internal class MayaTable
+	public class MayaTable
 	{
 		private const int I_TABLE_INDEX = 0;
 		private const int I_TABLE_STRING = 1;
@@ -36,7 +36,10 @@ namespace MayaBinaryTable
 				{
 					string[] splittedLine = reader.ReadLine().Split(',');
 					mayaTable[index][I_TABLE_INDEX] = splittedLine[I_TABLE_INDEX];
-					mayaTable[index][I_TABLE_STRING] = splittedLine[I_TABLE_STRING];
+					if (index == 53 /*Offset is -1*/)
+						mayaTable[index][I_TABLE_STRING] = "\n";
+					else
+						mayaTable[index][I_TABLE_STRING] = splittedLine[I_TABLE_STRING];
 					index++;
 				}
 			}
@@ -70,7 +73,7 @@ namespace MayaBinaryTable
 			{
 				foundElementIndex = 0;
 			}
-			
+
 
 			bytes.SetBytes(foundElementIndex);
 

@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace MayaBinaryTable
 {
-	internal struct EncodedMayaBytes
+	public struct EncodedMayaBytes
 	{
 		public bool HasTwoBytes
 		{
@@ -17,7 +17,7 @@ namespace MayaBinaryTable
 
 		public byte LastByte;
 
-		public short Combined { get => (short)((FirstByte << 8) | LastByte); }
+		public short Combined { get => (short)((FirstByte ?? 0 << 8) | LastByte); }
 
 		public void SetBytes(short value)
 		{

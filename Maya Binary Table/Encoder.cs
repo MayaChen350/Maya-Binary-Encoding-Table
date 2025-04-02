@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace MayaBinaryTable
 {
-	internal class Encoder
+	public class Encoder
 	{
 		private MayaTable mayaTable;
 
