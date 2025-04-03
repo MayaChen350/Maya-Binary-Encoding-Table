@@ -16,8 +16,10 @@ namespace MayaBinaryTable
 				filePath = Console.ReadLine();
 			}
 
+			const string PATH = "C:\\Users\\Mayachen\\Downloads\\test_result.txt";
 			var reader = new StreamReader(filePath);
-			var writer = new FileStream("C:\\Users\\Mayachen\\Downloads\\test_result.txt", FileMode.Append, FileAccess.Write);
+			if (File.Exists(PATH)) File.Delete(PATH);
+			var writer = new FileStream(PATH, FileMode.Append, FileAccess.Write);
 
 			new Encoder().Encode(reader, writer);
 			reader.Close();

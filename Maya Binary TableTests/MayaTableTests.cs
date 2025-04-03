@@ -1,4 +1,5 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿using MayaBinaryTable;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace MayaBinaryTable.Tests
 {
@@ -49,6 +50,19 @@ namespace MayaBinaryTable.Tests
 			Assert.AreEqual((short)172, table.GetBytesFromExactString("MAYA").Combined);
 			Assert.IsNotNull(table.GetBytesFromExactString("maya").FirstByte);
 
+		}
+
+		[TestMethod()]
+		public void HasMatchesWithFilterTest()
+		{
+			MayaTable table = MayaTable.Get();
+
+			string[] testTable1 = { "vince" };
+			string[] testTable2 = { "v", "vince" };
+
+			Assert.IsTrue(MayaTable.HasMatchesWithFilter("v", testTable1));
+			Assert.IsFalse(MayaTable.HasMatchesWithFilter("v", testTable2));
+			
 		}
 	}
 }

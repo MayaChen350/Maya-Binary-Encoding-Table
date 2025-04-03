@@ -92,9 +92,9 @@ namespace MayaBinaryTable
 			return bytes;
 		}
 
-		public static bool HasMatches(string str) => mayaRawTable.Any(elem => elem.Item2.Contains(str));
-		public static bool HasMatchesWithFilter(string str, IEnumerable<string> filter) => mayaRawTable.Any(elem => elem.Item2.Contains(str) && !filter.Any(s => s == elem.Item2));
+		public static bool HasMatches(string str) => mayaRawTable.Any(elem => elem.Item2.StartsWith(str));
+		public static bool HasMatchesWithFilter(string str, IEnumerable<string> filter) => mayaRawTable.Any(elem => elem.Item2.StartsWith(str) && !filter.Any(s => s == elem.Item2));
 		public static bool HasExactMatch(string str) => mayaRawTable.Any(elem => elem.Item2 == (str));
-		public static IEnumerable<string> Matches(string str) => mayaRawTable.FindAll(elem => elem.Item2.Contains(str)).Select(elem => elem.Item2);
+		public static IEnumerable<string> Matches(string str) => mayaRawTable.FindAll(elem => elem.Item2.StartsWith(str)).Select(elem => elem.Item2);
 	}
 }

@@ -22,9 +22,11 @@ namespace MayaBinaryTable.Tests
 		private void MatchingStringTest()
 		{
 			// Preparation
+			const string TEST_RESULT_PATH = "EncodingTestsResults\\MatchingTestResult.txt";
 			var encoder = new Encoder();
-			FileStream writer = new FileStream("EncodingTestsResults\\MatchingTestResult.txt", FileMode.Append, FileAccess.Write);
-			var baseString = new LinkedList<Char>();
+			if (File.Exists(TEST_RESULT_PATH)) File.Delete(TEST_RESULT_PATH);
+			FileStream writer = new FileStream(TEST_RESULT_PATH, FileMode.Append, FileAccess.Write);
+			var baseString = new LinkedList<char>();
 			foreach (char chara in "yyesA")
 			{
 				baseString.AddLast(chara);
@@ -36,7 +38,7 @@ namespace MayaBinaryTable.Tests
 			writer.Close();
 
 			// Assertion
-			FileStream reader = new FileStream("EncodingTestsResults\\MatchingTestResult.txt", FileMode.Open, FileAccess.Read);
+			FileStream reader = new FileStream(TEST_RESULT_PATH, FileMode.Open, FileAccess.Read);
 
 			foreach (var expected in new byte[] { 49, 98, 128, 149 })
 			{
@@ -58,21 +60,23 @@ namespace MayaBinaryTable.Tests
 		private void NonMatchingStringTest()
 		{
 			// Preparation
+			const string TEST_RESULT_PATH = "EncodingTestsResults\\NonMatchingTestResult.txt";
 			var encoder = new Encoder();
-			FileStream writer = new FileStream("EncodingTestsResults\\NonMatchingTestResult.txt", FileMode.Append, FileAccess.Write);
-			var baseString = new LinkedList<Char>();
+			if (File.Exists(TEST_RESULT_PATH)) File.Delete(TEST_RESULT_PATH);
+			FileStream writer = new FileStream(TEST_RESULT_PATH, FileMode.Append, FileAccess.Write);
+			var baseString = new LinkedList<char>();
 			foreach (char chara in "yedyed")
 			{
 				baseString.AddLast(chara);
 			}
 			var currString = "";
 			var lastMatch = "";
-			encoder.WriteResultEncoding(ref baseString, ref currString, ref lastMatch, writer);
+			encoder.WriteResultEncoding(ref baseString, ref currString, ref lastMatch, writer, true);
 
 			writer.Close();
 
 			// Assertion
-			FileStream reader = new FileStream("EncodingTestsResults\\NonMatchingTestResult.txt", FileMode.Open, FileAccess.Read);
+			FileStream reader = new FileStream(TEST_RESULT_PATH, FileMode.Open, FileAccess.Read);
 
 			foreach (var expected in new byte[] { 49, 9, 7, 49, 9, 7 })
 			{

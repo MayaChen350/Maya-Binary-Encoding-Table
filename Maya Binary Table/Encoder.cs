@@ -37,7 +37,7 @@ namespace MayaBinaryTable
 			}
 
 			// Write the rest of the characters
-			WriteResultEncoding(ref baseString, ref currString, ref lastMatch, writer);
+			WriteResultEncoding(ref baseString, ref currString, ref lastMatch, writer, true);
 
 		}
 
@@ -52,56 +52,64 @@ namespace MayaBinaryTable
 				baseString.RemoveFirst();
 
 				// Check if there are any matches
+				// If there are banned matches, don't consider them as matches
 				if (MayaTable.HasMatchesWithFilter(currString, bannedMatches))
 				{
 					// If there is matches check if there is an exact match
 					if (MayaTable.HasExactMatch(currString))
 						lastMatch = currString; // Save as the last match found
+
+					// If there is nothing left in the baseString and terminating is asked
+					if (baseString.Count == 0 && terminate)
+					{
+						// Then if it is an exact match with smth
+						if (MayaTable.HasExactMatch(lastMatch))
+						{
+							// Then write the bytes
+							var bytes = mayaTable.GetBytesFromExactString(currString).ToArray();
+							writer.Write(bytes, 0, bytes.Length);
+						}
+						// Otherwise
+						else
+						{
+							// Add the match to the banned match
+							bannedMatches.Add(lastMatch);
+							foreach (char chara in currString)
+							{
+								baseString.AddLast(chara);
+							}
+							lastMatch = "";
+							currString = "";
+						}
+					}
 				}
 				// Otherwise if there is no match, check if there was a match before
-
-				// TODO: Problem around here
+				// If there is no match, but the current string has only one character, still works with the unknown character
 				else if (lastMatch != "" || (currString.Length == 1 && lastMatch == ""))
 				{
-					// If there was, write down the byte from the last match
+					// If there was an unknown character, write it as last match
 					if (currString.Length == 1 && lastMatch == "")
 						lastMatch = currString;
 
+					// Write down the byte from the last match
 					var bytes = mayaTable.GetBytesFromExactString(lastMatch).ToArray();
 					writer.Write(bytes, 0, bytes.Length);
 					// Substract the last match from the current string
 					currString = currString.Substring(lastMatch.Length);
-					// Remake the Queue
+					// Remake the Queue ir needed
 					if (currString != "")
+					{
 						foreach (char chara in currString.Reverse())
 							baseString.AddFirst(chara);
-					// Reset the current string
-					currString = "";
+						// Reset the current string
+						currString = "";
+					}
 					// Reset the last match
 					lastMatch = "";
 
-					if (baseString.Count == 985)
-						Console.WriteLine(baseString.Count);
+					//if (baseString.Count == 985)
+					//	Console.WriteLine(baseString.Count);
 					Console.WriteLine(baseString.Count);
-				}
-
-				if (baseString.Count == 0 && terminate)
-				{
-					if (MayaTable.HasExactMatch(lastMatch))
-					{
-						var bytes = mayaTable.GetBytesFromExactString(currString).ToArray();
-						writer.Write(bytes, 0, bytes.Length);
-					}
-					else
-					{
-						bannedMatches.Add(lastMatch);
-						foreach (char chara in currString)
-						{
-							baseString.AddLast(chara);
-						}
-						lastMatch = "";
-						currString = "";
-					}
 				}
 			}
 		}
