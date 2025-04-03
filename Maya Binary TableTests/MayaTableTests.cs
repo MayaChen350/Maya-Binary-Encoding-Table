@@ -1,10 +1,4 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using MayaBinaryTable;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace MayaBinaryTable.Tests
 {
@@ -14,14 +8,14 @@ namespace MayaBinaryTable.Tests
 		[TestMethod()]
 		public void MayaTableTest()
 		{
-			MayaTable table = new MayaTable();
-			Assert.AreNotEqual(new string[] { }, table.TableElements);
+			MayaTable table = MayaTable.Get();
+			Assert.IsNotNull(table);
 		}
 
 		[TestMethod()]
 		public void GetBytesFromExactStringTest()
 		{
-			MayaTable table = new MayaTable();
+			MayaTable table = MayaTable.Get();
 
 			try
 			{
@@ -29,6 +23,8 @@ namespace MayaBinaryTable.Tests
 				Assert.Fail("An exception was expected");
 			}
 			catch { }
+
+			//Assert.AreEqual(0, table.GetBytesFromExactString("abcdef").Combined);
 
 			Assert.AreEqual(0, table.GetBytesFromExactString("\0x2555").Combined);
 

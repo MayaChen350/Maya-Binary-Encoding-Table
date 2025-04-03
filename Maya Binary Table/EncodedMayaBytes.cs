@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace MayaBinaryTable
+﻿namespace MayaBinaryTable
 {
 	public struct EncodedMayaBytes
 	{
@@ -18,6 +12,8 @@ namespace MayaBinaryTable
 		public byte LastByte;
 
 		public short Combined { get => (short)((FirstByte ?? 0 << 8) | LastByte); }
+
+		public byte[] ToArray() => HasTwoBytes ? new byte[] { FirstByte.Value, LastByte } : new byte[] { LastByte };
 
 		public void SetBytes(short value)
 		{

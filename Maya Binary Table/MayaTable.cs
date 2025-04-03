@@ -1,31 +1,35 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace MayaBinaryTable
 {
 	public class MayaTable
 	{
+		// Lazy Singleton
+		private static MayaTable mayaTable;
+
 		private const int I_TABLE_INDEX = 0;
 		private const int I_TABLE_STRING = 1;
 
-		private string[][] mayaTable;
+		private static List<(string, string)> mayaRawTable;
 
-		//public string[][] Table { get => mayaTable; }
+		//public string[][] Table { get => mayaRawTable; }
 
-		public MayaTable()
+		public static MayaTable Get()
+		{
+			if (mayaTable == null)
+				mayaTable = new MayaTable();
+
+			return mayaTable;
+		}
+
+		private MayaTable()
 		{
 			const string resourceName = "MayaBinaryTable.table.csv";
 
-			mayaTable = new string[255][];
-			for (int i = 0; i < mayaTable.Length; i++)
-			{
-				mayaTable[i] = new string[2];
-			}
+			mayaRawTable = new List<(string, string)>();
 
 			using (Stream stream = Assembly.GetExecutingAssembly().GetManifestResourceStream(resourceName))
 			using (StreamReader reader = new StreamReader(stream))
@@ -35,49 +39,58 @@ namespace MayaBinaryTable
 				while (!reader.EndOfStream)
 				{
 					string[] splittedLine = reader.ReadLine().Split(',');
-					mayaTable[index][I_TABLE_INDEX] = splittedLine[I_TABLE_INDEX];
-					if (index == 53 /*Offset is -1*/)
-						mayaTable[index][I_TABLE_STRING] = "\n";
+					string tableIndex = splittedLine[I_TABLE_INDEX];
+					string tableString;
+					if (index == 52 /*Offset is -1*/)
+						tableString = "\t";
+					else if (index == 53)
+						tableString = "\n";
+					else if (index == 74)
+						tableString = ",";
 					else
-						mayaTable[index][I_TABLE_STRING] = splittedLine[I_TABLE_STRING];
+						tableString = splittedLine[I_TABLE_STRING];
+
+					mayaRawTable.Add((tableIndex, tableString));
 					index++;
 				}
 			}
 		}
 
-		public string[] TableElements
-		{
-			get
-			{
-				string[] table = new string[mayaTable.Length];
+		//public string[] TableElements
+		//{
+		//	get
+		//	{
+		//		string[] table = new string[mayaRawTable.Count];
 
-				for (int i = 0; i < mayaTable.Length; i++)
-					if (mayaTable[i][I_TABLE_STRING] != null)
-						table[i] = mayaTable[i][I_TABLE_STRING];
-					else Array.Resize(ref table, table.Length - 1);
+		//		for (int i = 0; i < mayaRawTable.Count; i++)
+		//			if (mayaRawTable[i][I_TABLE_STRING] != null)
+		//				table[i] = mayaRawTable[i][I_TABLE_STRING];
+		//			else Array.Resize(ref table, table.Length - 1);
 
-				return table;
-			}
-		}
+		//		return table;
+		//	}
+		//}
 
 		public EncodedMayaBytes GetBytesFromExactString(string str)
 		{
 			EncodedMayaBytes bytes = new EncodedMayaBytes();
 			short foundElementIndex;
 
-			try
+			if (HasExactMatch(str))
 			{
-				foundElementIndex = short.Parse(mayaTable.First(elem => elem[I_TABLE_STRING] == str)[I_TABLE_INDEX]);
+				foundElementIndex = short.Parse(mayaRawTable.First(elem => elem.Item2 == str).Item1);
 			}
-			catch (Exception e)
+			else
 			{
 				foundElementIndex = 0;
 			}
-
 
 			bytes.SetBytes(foundElementIndex);
 
 			return bytes;
 		}
+
+		public static bool HasMatches(string str) => mayaRawTable.Any(elem => elem.Item2.Contains(str));
+		public static bool HasExactMatch(string str) => mayaRawTable.Any(elem => elem.Item2 == (str));
 	}
 }

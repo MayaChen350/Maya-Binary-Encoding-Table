@@ -1,7 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Threading;
 
 namespace MayaBinaryTable
 {
@@ -19,9 +17,11 @@ namespace MayaBinaryTable
 			}
 
 			var reader = new StreamReader(filePath);
+			var writer = new FileStream("C:\\Users\\Mayachen\\Downloads\\test_result.txt", FileMode.Append, FileAccess.Write);
 
-			byte[] encodedString = new Encoder(new MayaTable()).Encode(reader);
-			File.WriteAllBytes("C:\\Users\\Mayachen\\Downloads\\test_result.txt", encodedString);
+			new Encoder().Encode(reader, writer);
+			reader.Close();
+			writer.Close();
 		}
 	}
 }
