@@ -41,8 +41,9 @@ namespace MayaBinaryTable
 
 		}
 
-		public void WriteResultEncoding(ref LinkedList<char> baseString, ref string currString, ref string lastMatch, FileStream writer)
+		public void WriteResultEncoding(ref LinkedList<char> baseString, ref string currString, ref string lastMatch, FileStream writer, bool terminate = false)
 		{
+			List<string> bannedMatches = new List<string>();
 			// Write as long as the baseString is not empty
 			while (baseString.Any())
 			{
@@ -51,7 +52,7 @@ namespace MayaBinaryTable
 				baseString.RemoveFirst();
 
 				// Check if there are any matches
-				if (MayaTable.HasMatches(currString))
+				if (MayaTable.HasMatchesWithFilter(currString, bannedMatches))
 				{
 					// If there is matches check if there is an exact match
 					if (MayaTable.HasExactMatch(currString))
@@ -83,7 +84,31 @@ namespace MayaBinaryTable
 						Console.WriteLine(baseString.Count);
 					Console.WriteLine(baseString.Count);
 				}
+
+				if (baseString.Count == 0 && terminate)
+				{
+					if (MayaTable.HasExactMatch(lastMatch))
+					{
+						var bytes = mayaTable.GetBytesFromExactString(currString).ToArray();
+						writer.Write(bytes, 0, bytes.Length);
+					}
+					else
+					{
+						bannedMatches.Add(lastMatch);
+						foreach (char chara in currString)
+						{
+							baseString.AddLast(chara);
+						}
+						lastMatch = "";
+						currString = "";
+					}
+				}
 			}
+		}
+
+		private void writeRemainingString(string currString)
+		{
+
 		}
 
 		//public byte[] Encode(StreamReader reader, StreamWriter writer)

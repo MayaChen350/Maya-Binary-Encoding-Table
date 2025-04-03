@@ -24,9 +24,7 @@ namespace MayaBinaryTable.Tests
 			}
 			catch { }
 
-			//Assert.AreEqual(0, table.GetBytesFromExactString("abcdef").Combined);
-
-			Assert.AreEqual(0, table.GetBytesFromExactString("\0x2555").Combined);
+			Assert.AreEqual(57, table.GetBytesFromExactString("\0x2555").Combined);
 
 			Assert.AreEqual((short)1, table.GetBytesFromExactString("a").Combined);
 			Assert.IsNull(table.GetBytesFromExactString("a").FirstByte);

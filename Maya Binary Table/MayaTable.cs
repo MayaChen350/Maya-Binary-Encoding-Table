@@ -42,9 +42,11 @@ namespace MayaBinaryTable
 					string tableIndex = splittedLine[I_TABLE_INDEX];
 					string tableString;
 					if (index == 52 /*Offset is -1*/)
-						tableString = "\t";
+						tableString = " ";
 					else if (index == 53)
 						tableString = "\n";
+					else if (index == 54)
+						tableString = "\t";
 					else if (index == 74)
 						tableString = ",";
 					else
@@ -82,7 +84,7 @@ namespace MayaBinaryTable
 			}
 			else
 			{
-				foundElementIndex = 0;
+				foundElementIndex = 57;
 			}
 
 			bytes.SetBytes(foundElementIndex);
@@ -91,6 +93,8 @@ namespace MayaBinaryTable
 		}
 
 		public static bool HasMatches(string str) => mayaRawTable.Any(elem => elem.Item2.Contains(str));
+		public static bool HasMatchesWithFilter(string str, IEnumerable<string> filter) => mayaRawTable.Any(elem => elem.Item2.Contains(str) && !filter.Any(s => s == elem.Item2));
 		public static bool HasExactMatch(string str) => mayaRawTable.Any(elem => elem.Item2 == (str));
+		public static IEnumerable<string> Matches(string str) => mayaRawTable.FindAll(elem => elem.Item2.Contains(str)).Select(elem => elem.Item2);
 	}
 }
