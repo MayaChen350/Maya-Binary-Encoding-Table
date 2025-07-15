@@ -1,4 +1,4 @@
-﻿namespace MayaBinaryTable;
+﻿namespace MayaBinTable.Encoding;
 
 internal class Program
 {
@@ -12,18 +12,18 @@ internal class Program
             Console.WriteLine("This path is invalid. Write another.");
             inputPath = Console.ReadLine();
         }
-        
+
         Console.WriteLine("Now, write the name of the output file.");
         string? outputPath = Console.ReadLine();
-        
+
         while (File.Exists(outputPath))
         {
             Console.WriteLine("This name is owned. Please write one which has yet to be.");
             outputPath = Console.ReadLine();
         }
-        
+
         File.Create(outputPath!).Close();
-        
+
         Console.WriteLine("Excellent. Now we shall begin.");
         var reader = new StreamReader(inputPath);
         var writer = new FileStream(outputPath!, FileMode.Append, FileAccess.Write);

@@ -3,9 +3,15 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.12.35527.113
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MayaBinaryTable", "MayaBinaryTable\MayaBinaryTable.csproj", "{ECD7E2D4-B671-4BD2-87CE-75D9D8942D46}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MayaBinTable.Common", "MayaBinTable.Common\MayaBinTable.Common.csproj", "{ECD7E2D4-B671-4BD2-87CE-75D9D8942D46}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MayaBinaryTableTests", "MayaBinaryTableTests\MayaBinaryTableTests.csproj", "{AB62839B-FC46-454B-A5FA-6DC074B1EB10}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MayaBinTable.Tests", "MayaBinTable.Tests\MayaBinTable.Tests.csproj", "{AB62839B-FC46-454B-A5FA-6DC074B1EB10}"
+	ProjectSection(ProjectDependencies) = postProject
+		{ECD7E2D4-B671-4BD2-87CE-75D9D8942D46} = {ECD7E2D4-B671-4BD2-87CE-75D9D8942D46}
+		{2F4E6623-83AF-48D4-971A-D1DB35E897A6} = {2F4E6623-83AF-48D4-971A-D1DB35E897A6}
+	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MayaBinTable.Encoding", "MayaBinTable.Encoding\MayaBinTable.Encoding.csproj", "{2F4E6623-83AF-48D4-971A-D1DB35E897A6}"
 	ProjectSection(ProjectDependencies) = postProject
 		{ECD7E2D4-B671-4BD2-87CE-75D9D8942D46} = {ECD7E2D4-B671-4BD2-87CE-75D9D8942D46}
 	EndProjectSection
@@ -24,6 +30,10 @@ Global
 		{AB62839B-FC46-454B-A5FA-6DC074B1EB10}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{AB62839B-FC46-454B-A5FA-6DC074B1EB10}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{AB62839B-FC46-454B-A5FA-6DC074B1EB10}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2F4E6623-83AF-48D4-971A-D1DB35E897A6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2F4E6623-83AF-48D4-971A-D1DB35E897A6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2F4E6623-83AF-48D4-971A-D1DB35E897A6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2F4E6623-83AF-48D4-971A-D1DB35E897A6}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

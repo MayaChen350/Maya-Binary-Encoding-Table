@@ -1,0 +1,29 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>net9.0</TargetFramework>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <Nullable>enable</Nullable>
+        <RootNamespace>MayaBinTable.Common</RootNamespace>
+        <AssemblyName>MayaBinTable.Common</AssemblyName>
+        <PackageId>MayaBinTable.Common</PackageId>
+        <Title>MayaBinTable.Common</Title>
+        <Authors>MayaChen350</Authors>
+        <Copyright>MayaChen350</Copyright>
+        <Company/>
+        <Product>MayaBinTable.Common</Product>
+        <RepositoryUrl>https://github.com/MayaChen350/Maya-Binary-Encoding-Table</RepositoryUrl>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <None Remove="table.csv"/>
+        <EmbeddedResource Include="table.csv">
+            <CustomToolNamespace>MayaBinTable.Common</CustomToolNamespace>
+        </EmbeddedResource>
+    </ItemGroup>
+
+    <ItemGroup>
+        <PackageReference Include="JetBrains.Annotations" Version="2024.3.0"/>
+    </ItemGroup>
+
+</Project>

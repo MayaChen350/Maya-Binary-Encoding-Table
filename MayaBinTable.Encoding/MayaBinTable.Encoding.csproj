@@ -1,0 +1,19 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <OutputType>Exe</OutputType>
+        <TargetFramework>net9.0</TargetFramework>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <Nullable>enable</Nullable>
+        <AssemblyName>Encoder</AssemblyName>
+        <Authors>MayaChen350</Authors>
+        <Copyright>MayaChen350</Copyright>
+        <RepositoryUrl>https://github.com/MayaChen350/Maya-Binary-Encoding-Table</RepositoryUrl>
+        <Company/>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <ProjectReference Include="..\MayaBinTable.Common\MayaBinTable.Common.csproj"/>
+    </ItemGroup>
+
+</Project>
