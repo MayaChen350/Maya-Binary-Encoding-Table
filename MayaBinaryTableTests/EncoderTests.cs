@@ -1,25 +1,13 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using MayaBinaryTable;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.IO;
+﻿using JetBrains.Annotations;
 
 namespace MayaBinaryTable.Tests
 {
-	[TestClass()]
+	[TestFixture, TestSubject(typeof(Encoder))]
 	public class EncoderTests
 	{
-		[TestMethod()]
-		public void EncodeTest()
-		{
-			MatchingStringTest();
-			NonMatchingStringTest();
-		}
-
-		private void MatchingStringTest()
+		
+		[Test]
+		public void MatchingStringTest()
 		{
 			// Preparation
 			const string TEST_RESULT_PATH = "EncodingTestsResults\\MatchingTestResult.txt";
@@ -57,7 +45,8 @@ namespace MayaBinaryTable.Tests
 			reader.Close();
 		}
 
-		private void NonMatchingStringTest()
+		[Test]
+		public void NonMatchingStringTest()
 		{
 			// Preparation
 			const string TEST_RESULT_PATH = "EncodingTestsResults\\NonMatchingTestResult.txt";
@@ -91,14 +80,14 @@ namespace MayaBinaryTable.Tests
 			reader.Close();
 		}
 
-		private void WithFileTest()
-		{
-
-		}
-
-		private void FileNowEmptyTest()
-		{
-
-		}
+		// public void WithFileTest()
+		// {
+		//
+		// }
+		//
+		// public void FileNowEmptyTest()
+		// {
+		//
+		// }
 	}
 }

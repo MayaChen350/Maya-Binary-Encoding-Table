@@ -1,24 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-
-namespace MayaBinaryTable
+﻿namespace MayaBinaryTable
 {
 	public class Encoder
 	{
-		private MayaTable mayaTable;
-
-		private string characterStack;
-
-		private bool symbolFound;
-
-		public Encoder()
-		{
-			mayaTable = MayaTable.Get();
-			characterStack = string.Empty;
-		}
-
 		public void Encode(StreamReader reader, FileStream writer)
 		{
 			LinkedList<char> baseString = new LinkedList<char>(); // String going to be encoded
@@ -28,7 +11,7 @@ namespace MayaBinaryTable
 			// Write bytes as much as the text has text
 			while (!reader.EndOfStream)
 			{
-				// Add 1000 characters or less to encode
+				// Add 1000 characters or fewer to encode
 				for (int i = 0; i < 1000 && !reader.EndOfStream; i++)
 				{
 					baseString.AddLast((char)reader.Read());
@@ -66,7 +49,7 @@ namespace MayaBinaryTable
 						if (MayaTable.HasExactMatch(lastMatch))
 						{
 							// Then write the bytes
-							var bytes = mayaTable.GetBytesFromExactString(currString).ToArray();
+							var bytes = MayaTable.GetBytesFromExactString(currString).ToArray();
 							writer.Write(bytes, 0, bytes.Length);
 						}
 						// Otherwise
@@ -92,7 +75,7 @@ namespace MayaBinaryTable
 						lastMatch = currString;
 
 					// Write down the byte from the last match
-					var bytes = mayaTable.GetBytesFromExactString(lastMatch).ToArray();
+					var bytes = MayaTable.GetBytesFromExactString(lastMatch).ToArray();
 					writer.Write(bytes, 0, bytes.Length);
 					// Substract the last match from the current string
 					currString = currString.Substring(lastMatch.Length);
@@ -113,65 +96,5 @@ namespace MayaBinaryTable
 				}
 			}
 		}
-
-		private void writeRemainingString(string currString)
-		{
-
-		}
-
-		//public byte[] Encode(StreamReader reader, StreamWriter writer)
-		//{
-		//	List<byte> encodedStream = new List<byte>();
-		//	while (!file.EndOfStream)
-		//	{
-		//		TryEncodeChar(ref encodedStream, (char)file.Read());
-		//	}
-
-		//	if (characterStack != string.Empty)
-		//		foreach (char _char in characterStack)
-		//			encodedStream.Add(mayaTable.GetBytesFromExactString(_char.ToString()));
-
-		//	return encodedStream.ToArray();
-		//}
-
-		// what the heck is this
-		//private void TryEncodeChar(ref List<byte> stream, char _char)
-		//{
-		//	EncodedMayaBytes bytes = new EncodedMayaBytes();
-		//	string charStack = characterStack;
-
-		//	charStack += _char;
-		//	List<string> elementsFound = mayaTable.TableElements.Where(elem => elem.StartsWith(charStack)).ToList();
-
-		//	if (symbolFound && !elementsFound.Any())
-		//	{
-		//		while (!elementsFound.Any())
-		//		{
-		//			charStack.Remove(charStack.Length - 1);
-		//			elementsFound = mayaTable.TableElements.Where(elem => elem.StartsWith(charStack)).ToList();
-		//		}
-
-		//		List<String> invalidSymbolsFound = new List<string>();
-		//		invalidSymbolsFound.Add(elementsFound.First());
-
-		//		var pseudoCharFile = characterStack + _char;
-		//		charStack = string.Empty;
-
-		//		while (pseudoCharFile != string.Empty)
-		//		{
-		//			charStack += pseudoCharFile.First();
-		//			pseudoCharFile = pseudoCharFile.Remove(0);
-		//			elementsFound = mayaTable.TableElements.Where(elem => elem.StartsWith(charStack)).ToList();
-		//		}
-
-		//		bytes = mayaTable.GetBytesFromExactString(characterStack);
-		//		symbolFound = false;
-		//		characterStack = _char.ToString();
-		//		stream.Add(bytes);
-		//	}
-
-		//	characterStack += _char;
-		//	symbolFound = elementsFound.Any();
-		//}
 	}
 }
