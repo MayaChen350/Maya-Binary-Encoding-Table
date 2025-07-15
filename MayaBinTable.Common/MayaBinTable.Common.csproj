@@ -15,6 +15,14 @@
         <RepositoryUrl>https://github.com/MayaChen350/Maya-Binary-Encoding-Table</RepositoryUrl>
     </PropertyGroup>
 
+    <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
+      <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    </PropertyGroup>
+
+    <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
+      <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    </PropertyGroup>
+
     <ItemGroup>
         <None Remove="table.csv"/>
         <EmbeddedResource Include="table.csv">

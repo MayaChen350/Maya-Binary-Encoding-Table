@@ -1,12 +1,12 @@
-﻿namespace MayaBinTable.Common;
-
-static class Extensions
-{
-    public static void Add(this List<byte> list, EncodedMayaBytes bytes)
-    {
-        if (bytes.HasTwoBytes)
-            list.Add((byte)bytes.FirstByte!);
-
-        list.Add(bytes.LastByte);
-    }
-}
+// namespace MayaBinTable.Common;
+//
+// public static class Extensions
+// {
+//     public static void Write(this StreamWriter streamWriter, Span<Byte> bytes)
+//     {
+//         foreach (byte b in bytes)
+//         {
+//             streamWriter.Write(b);
+//         }
+//     }
+// }

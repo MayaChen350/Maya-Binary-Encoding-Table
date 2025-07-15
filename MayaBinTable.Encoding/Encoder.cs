@@ -52,8 +52,8 @@ public class Encoder
                     if (MayaTable.HasExactMatch(lastMatch))
                     {
                         // Then write the bytes
-                        var bytes = MayaTable.GetBytesFromExactString(currString).ToArray();
-                        writer.Write(bytes, 0, bytes.Length);
+                        var bytes = MayaTable.GetBytesFromExactString(currString).AsSpan();
+                        writer.Write(bytes);
                     }
                     // Otherwise
                     else
@@ -79,8 +79,8 @@ public class Encoder
                     lastMatch = currString;
 
                 // Write down the byte from the last match
-                var bytes = MayaTable.GetBytesFromExactString(lastMatch).ToArray();
-                writer.Write(bytes, 0, bytes.Length);
+                var bytes = MayaTable.GetBytesFromExactString(lastMatch).AsSpan();
+                writer.Write(bytes);
                 // Substract the last match from the current string
                 currString = currString.Substring(lastMatch.Length);
                 // Remake the Queue ir needed

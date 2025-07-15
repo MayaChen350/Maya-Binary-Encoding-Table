@@ -43,11 +43,11 @@ public static class MayaTable
     public static EncodedMayaBytes GetBytesFromExactString(string str)
     {
         EncodedMayaBytes bytes = new();
-        short foundElementIndex;
+        ushort foundElementIndex;
 
         if (HasExactMatch(str))
         {
-            foundElementIndex = short.Parse(MayaRawTable.First(elem => elem.Item2 == str).Item1);
+            foundElementIndex = ushort.Parse(MayaRawTable.First(elem => elem.Item2 == str).Item1);
         }
         else
         {

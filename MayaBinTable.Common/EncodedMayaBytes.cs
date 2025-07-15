@@ -1,30 +1,65 @@
-﻿// ReSharper disable UseCollectionExpression
-// ReSharper disable ShiftExpressionZeroLeftOperand
+﻿namespace MayaBinTable.Common;
 
-namespace MayaBinTable.Common;
-
-public struct EncodedMayaBytes
+public unsafe struct EncodedMayaBytes
 {
-    public bool HasTwoBytes => FirstByte != null;
+    private bool _hasTwoBytes;
 
-    public byte? FirstByte;
+    private fixed byte _bytes[2];
 
-    public byte LastByte;
+    public byte? FirstByte
+    {
+        get => _hasTwoBytes ? _bytes[0] : null;
+        private set => _bytes[0] = value!.Value;
+    }
 
-    public short Combined => (short)((FirstByte ?? 0 << 8) | LastByte);
+    public byte LastByte
+    {
+        get => _bytes[1];
+        private set => _bytes[1] = value;
+    }
 
-    public byte[] ToArray() => HasTwoBytes ? new[] { FirstByte!.Value, LastByte } : new[] { LastByte };
+    public ushort Combined
+    {
+        get
+        {
+            fixed (byte* p = &_bytes[0])
+            {
+                return BitConverter.IsLittleEndian 
+                    ? *(ushort*)(p + 1)
+                    : *(ushort*)p;
+            }
+        }
+    }
 
-    public void SetBytes(short value)
+    public Span<byte> AsSpan()
+    {
+        Span<byte> bytes;
+
+        if (_hasTwoBytes)
+        {
+            bytes = stackalloc byte[2];
+            bytes[0] = _bytes[0];
+            bytes[1] = _bytes[1];
+        }
+        else
+        {
+            bytes = stackalloc byte[1];
+            bytes[0] = _bytes[1];
+        }
+        return bytes;
+    }
+
+    public void SetBytes(ushort value)
     {
         if (value >= 128)
         {
+            _hasTwoBytes = true;
             FirstByte = (byte)(0b10000000 | ((value & 0xFF00) >> 8));
             LastByte = (byte)(value & 0x00FF);
         }
         else
         {
-            FirstByte = null;
+            _hasTwoBytes = false;
             LastByte = (byte)value;
         }
     }
