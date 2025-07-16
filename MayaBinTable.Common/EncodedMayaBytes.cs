@@ -31,19 +31,19 @@ public unsafe struct EncodedMayaBytes
         }
     }
 
-    public Span<byte> AsSpan()
+    public byte[] AsArray()
     {
-        Span<byte> bytes;
+        byte[] bytes;
 
         if (_hasTwoBytes)
         {
-            bytes = stackalloc byte[2];
+            bytes = new byte[2];
             bytes[0] = _bytes[0];
             bytes[1] = _bytes[1];
         }
         else
         {
-            bytes = stackalloc byte[1];
+            bytes = new byte[1];
             bytes[0] = _bytes[1];
         }
         return bytes;

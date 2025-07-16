@@ -24,14 +24,18 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <None Remove="table.csv"/>
-        <EmbeddedResource Include="table.csv">
-            <CustomToolNamespace>MayaBinTable.Common</CustomToolNamespace>
-        </EmbeddedResource>
+        <PackageReference Include="JetBrains.Annotations" Version="2024.3.0"/>
     </ItemGroup>
 
     <ItemGroup>
-        <PackageReference Include="JetBrains.Annotations" Version="2024.3.0"/>
+      <None Remove="ENTRIES.txt" />
+      <EmbeddedResource Include="ENTRIES.txt">
+        <CustomToolNamespace>MayaBinTable.Common</CustomToolNamespace>
+      </EmbeddedResource>
+      <None Remove="OFFSETS.bin" />
+      <EmbeddedResource Include="OFFSETS.bin">
+        <CustomToolNamespace>MayaBinTable.Common</CustomToolNamespace>
+      </EmbeddedResource>
     </ItemGroup>
 
 </Project>

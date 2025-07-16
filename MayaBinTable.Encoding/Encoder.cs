@@ -39,20 +39,20 @@ public class Encoder
 
             // Check if there are any matches
             // If there are banned matches, don't consider them as matches
-            if (MayaTable.HasMatchesWithFilter(currString, bannedMatches))
+            if (TableHandler.HasMatchesWithFilter(currString, bannedMatches))
             {
                 // If there is matches check if there is an exact match
-                if (MayaTable.HasExactMatch(currString))
+                if (TableHandler.HasExactMatch(currString))
                     lastMatch = currString; // Save as the last match found
 
                 // If there is nothing left in the baseString and terminating is asked
                 if (baseString.Count == 0 && terminate)
                 {
                     // Then if it is an exact match with smth
-                    if (MayaTable.HasExactMatch(lastMatch))
+                    if (TableHandler.HasExactMatch(lastMatch))
                     {
                         // Then write the bytes
-                        var bytes = MayaTable.GetBytesFromExactString(currString).AsSpan();
+                        byte[] bytes = TableHandler.GetBytesFromExactString(currString).AsArray();
                         writer.Write(bytes);
                     }
                     // Otherwise
@@ -79,7 +79,7 @@ public class Encoder
                     lastMatch = currString;
 
                 // Write down the byte from the last match
-                var bytes = MayaTable.GetBytesFromExactString(lastMatch).AsSpan();
+                var bytes = TableHandler.GetBytesFromExactString(lastMatch).AsArray();
                 writer.Write(bytes);
                 // Substract the last match from the current string
                 currString = currString.Substring(lastMatch.Length);

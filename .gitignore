@@ -361,3 +361,7 @@ MigrationBackup/
 
 # Fody - auto-generated XML schema
 FodyWeavers.xsd
+
+## BUILT FROM /Build
+/MayaBinTable.Common/ENTRIES.txt
+/MayaBinTable.Common/OFFSETS.bin

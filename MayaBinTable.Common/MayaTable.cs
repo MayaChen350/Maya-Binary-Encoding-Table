@@ -1,71 +1,62 @@
 ﻿using System.Reflection;
+using System.Reflection.Metadata;
 
 namespace MayaBinTable.Common;
 
-public static class MayaTable
+public static unsafe class MayaTable
 {
-    private const int INDEX_TABLE_INDEX = 0;
-    private const int INDEX_TABLE_STRING = 1;
+    public const string MAGIC_NUMBER = "\x4D\x41\x59\x41\x20\x3A\x33";
 
-    private static readonly List<(string, string)> MayaRawTable = [];
+    public static readonly Stream EntryStream =
+        Assembly.GetExecutingAssembly().GetManifestResourceStream("MayaBinTable.Common.ENTRIES.txt")!;
 
-    private const string RESOURCE_NAME = "MayaBinTable.Common.table.csv";
+    public static readonly Stream OffsetStream =
+        Assembly.GetExecutingAssembly().GetManifestResourceStream("MayaBinTable.Common.OFFSETS.bin")!;
 
-    static MayaTable()
+    public static ushort GetOffset(int index)
     {
-        using Stream stream = Assembly.GetExecutingAssembly().GetManifestResourceStream(RESOURCE_NAME)!;
-        using (StreamReader reader = new StreamReader(stream))
-        {
-            int index = 0;
+        OffsetStream.Position = index * sizeof(ushort);
+        byte[] result = new byte[sizeof(ushort)];
+        OffsetStream.ReadExactly(result, 0, sizeof(ushort));
 
-            while (!reader.EndOfStream)
+        fixed (byte* p = result)
+        {
+            return BitConverter.IsLittleEndian
+                ? *(ushort*)(p + 1)
+                : *(ushort*)p;
+        }
+    }
+
+    public static string GetEntry(ushort offset)
+    {
+        EntryStream.Position = offset;
+        
+        byte[] currChar = new byte[sizeof(char)];       
+        EntryStream.ReadExactlyAsync(currChar, 0, sizeof(char));
+        List<char> newString = [];
+        fixed (byte* ptrCurrChar = currChar)
+        {
+            do
             {
-                string[] splitLine = reader.ReadLine()!.Split(',');
-                string tableIndex = splitLine[INDEX_TABLE_INDEX];
-                string tableString = index switch
-                {
-                    /*Offset is -1*/
-                    52 => " ",
-                    53 => "\n",
-                    54 => "\t",
-                    74 => ",",
-                    _ => splitLine[INDEX_TABLE_STRING]
-                };
-
-                MayaRawTable.Add((tableIndex, tableString));
-                index++;
-            }
+                EntryStream.ReadExactly(currChar, 0, sizeof(char));
+                newString.Add(*(char*)&ptrCurrChar);
+            } while (*(char*)&ptrCurrChar != '\0');
         }
 
-        if (MayaRawTable.Count == 0) throw new ApplicationException("The table was empty.");
+        return new string(newString.ToArray());
     }
 
-    public static EncodedMayaBytes GetBytesFromExactString(string str)
+    public static string[] GetCompleteEntryTable()
     {
-        EncodedMayaBytes bytes = new();
-        ushort foundElementIndex;
+        long length = OffsetStream.Length / sizeof(ushort);
+        var table = new string[length];
+        table[0] = "\0";
 
-        if (HasExactMatch(str))
+        byte[] currChar = new byte[sizeof(char)];
+        for (int i = 1 /* 0 is NULL*/; i < length; i++)
         {
-            foundElementIndex = ushort.Parse(MayaRawTable.First(elem => elem.Item2 == str).Item1);
+            table[i] = GetEntry(GetOffset(i));
         }
-        else
-        {
-            foundElementIndex = 57;
-        }
-
-        bytes.SetBytes(foundElementIndex);
-
-        return bytes;
+        return table;
     }
-
-    public static bool HasMatches(string str) => MayaRawTable.Any(elem => elem.Item2.StartsWith(str));
-
-    public static bool HasMatchesWithFilter(string str, IEnumerable<string> filter) =>
-        MayaRawTable.Any(elem => elem.Item2.StartsWith(str) && filter.All(s => s != elem.Item2));
-
-    public static bool HasExactMatch(string str) => MayaRawTable.Any(elem => elem.Item2 == (str));
-
-    public static IEnumerable<string> Matches(string str) =>
-        MayaRawTable.FindAll(elem => elem.Item2.StartsWith(str)).Select(elem => elem.Item2);
 }

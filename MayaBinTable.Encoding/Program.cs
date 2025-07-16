@@ -1,4 +1,6 @@
-﻿namespace MayaBinTable.Encoding;
+﻿using MayaBinTable.Common;
+
+namespace MayaBinTable.Encoding;
 
 internal class Program
 {
@@ -22,7 +24,7 @@ internal class Program
             outputPath = Console.ReadLine();
         }
 
-        File.Create(outputPath!).Close();
+        File.WriteAllText(outputPath!, MayaTable.MAGIC_NUMBER);
 
         Console.WriteLine("Excellent. Now we shall begin.");
         var reader = new StreamReader(inputPath);
@@ -31,5 +33,7 @@ internal class Program
         new Encoder().Encode(reader, writer);
         reader.Close();
         writer.Close();
+        MayaTable.OffsetStream.Close();
+        MayaTable.EntryStream.Close();
     }
 }
