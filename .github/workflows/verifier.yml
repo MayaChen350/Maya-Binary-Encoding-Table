@@ -1,0 +1,31 @@
+name: Project working state
+
+on:
+  push:
+    branches: [ "original-project" ]
+  pull_request:
+    branches: [ "original-project" ]
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+      - name: Set up Python 3.13
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 9.0.x
+      - name: Restore dependencies
+        run: dotnet restore
+      - name: Build resources
+        run: python3.13 Build/compile_tablecsv.py
+      - name: Build .NET
+        run: dotnet build --no-restore
+      - name: Test
+        run: dotnet test --no-build --verbosity normal
