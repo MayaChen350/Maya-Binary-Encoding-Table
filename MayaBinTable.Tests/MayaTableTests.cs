@@ -10,13 +10,19 @@ namespace MayaBinTable.Tests
         [Test]
         public void GetOffsetTest()
         {
-            throw new NotImplementedException();
+            var expected = 37;
+            var actual = MayaTable.GetOffset(8);
+            
+            Assert.That(actual,Is.EqualTo(expected));
         }
 
         [Test]
         public void GetEntryTest()
         {
-            throw new NotImplementedException();
+            var expected = "gah";
+            var actual = MayaTable.GetEntry(37);
+            
+            Assert.That(actual,Is.EqualTo(expected));
         }
     }
 }

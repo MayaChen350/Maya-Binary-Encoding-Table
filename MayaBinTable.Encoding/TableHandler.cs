@@ -9,15 +9,12 @@ public static unsafe class TableHandler
     public static EncodedMayaBytes GetBytesFromExactString(string str)
     {
         EncodedMayaBytes bytes = new();
-        ushort foundElementIndex;
+        ushort foundElementIndex = 57;
 
-        if (HasExactMatch(str))
+        for (ushort i = 0; i < MayaRawTable.Length; i++)
         {
-            foundElementIndex = ushort.Parse(MayaRawTable.First(elem => elem == str));
-        }
-        else
-        {
-            foundElementIndex = 57;
+            if (MayaRawTable[i] == str)
+                foundElementIndex = i;
         }
 
         bytes.SetBytes(foundElementIndex);
