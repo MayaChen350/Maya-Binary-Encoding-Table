@@ -4,6 +4,15 @@ namespace MayaBinTable.Encoding;
 
 public class Encoder
 {
+    MayaTable table;
+
+    public Encoder()
+    {
+        // Init MayaTable and TableHandler
+        table = new MayaTable();
+        TableHandler.MayaRawTable = table.GetCompleteEntryTable();
+    }
+    
     public void Encode(StreamReader reader, FileStream writer)
     {
         LinkedList<char> baseString = new LinkedList<char>(); // String going to be encoded
@@ -97,7 +106,7 @@ public class Encoder
 
                 //if (baseString.Count == 985)
                 //	Console.WriteLine(baseString.Count);
-                Console.WriteLine(baseString.Count);
+                // Console.WriteLine(baseString.Count);
             }
         }
     }

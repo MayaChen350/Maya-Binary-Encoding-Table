@@ -4,7 +4,7 @@ using System.Text;
 
 namespace MayaBinTable.Common;
 
-public static unsafe class MayaTable
+public unsafe class MayaTable
 {
     public const string MAGIC_NUMBER = "\x4D\x41\x59\x41\x20\x3A\x33";
 
@@ -26,7 +26,7 @@ public static unsafe class MayaTable
     /// Get the offset in the OffsetStream from the specified index 
     /// </summary>
     /// <param name="index">The MayaByte/index value</param>
-    public static ushort GetOffset(int index)
+    public ushort GetOffset(long index)
     {
         // The file contains offsets as ushort values
         OffsetStream.Position = index * sizeof(ushort);
@@ -41,7 +41,7 @@ public static unsafe class MayaTable
     /// Get an entry in the EntryStream from the specified offset
     /// </summary>
     /// <param name="offset">Usually from the OffsetStream</param>
-    public static string GetEntry(ushort offset)
+    public string GetEntry(ushort offset)
     {
         EntryStream.Position = offset;
 
@@ -67,15 +67,20 @@ public static unsafe class MayaTable
     /// <summary>
     /// Make a new indexed maya table
     /// </summary>
-    public static string[] GetCompleteEntryTable()
+    public string[] GetCompleteEntryTable()
     {
         long length = OffsetStream.Length / sizeof(ushort);
+        UiManager.CreateMessage("Making table");
+        long i = 1; /* 0 is NULL*/
+        UiManager.CreateProgressBar(&length, &i);
         var table = new string[length];
         table[0] = "\0";
 
-        for (int i = 1 /* 0 is NULL*/; i < length; i++)
+        while (i < length)
         {
             table[i] = GetEntry(GetOffset(i));
+            i++;
+            UiManager.UpdateUi();
         }
 
         return table;

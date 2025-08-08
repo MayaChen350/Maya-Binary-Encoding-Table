@@ -2,9 +2,9 @@ using MayaBinTable.Common;
 
 namespace MayaBinTable.Encoding;
 
-public static unsafe class TableHandler
+public static class TableHandler
 {
-    private static readonly string[] MayaRawTable = MayaTable.GetCompleteEntryTable();
+    public static string[] MayaRawTable;
 
     public static EncodedMayaBytes GetBytesFromExactString(string str)
     {
